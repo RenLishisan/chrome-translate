@@ -1,22 +1,47 @@
-import './index.css';
+import axios from 'axios'
 import translateIcon from '../img/translate-icon.png'
+import './index.css';
+import MD5 from './md5'
+
 let checkedText = "" //选中的文本
 let mouseCoordinate = {
 	clientX: '',
 	clientY: ''
 } //鼠标当前坐标
 
+//获取翻译结果
+function getTranslateResult(value){
+	const appid = '20220823001316697'
+	const key = 'ENt9X0cenQgCd_5aXNuD'
+	const salt = (new Date()).getTime()
+	const str1 = appid + value + salt + key
+	const data = {
+		q: value,
+		appid: appid,
+		salt: salt,
+		from: 'auto',
+		to: 'zh',
+		sign: MD5(str1)
+	}
+	axios.get('/index/api/trans/vip/translate',{params:data})
+		.then((res) =>  {
+			document.getElementById('chromeTranslate').innerHTML = `
+		<div class="translate-card"
+		style="transform: translate(${mouseCoordinate.clientX<200?mouseCoordinate.clientX : mouseCoordinate.clientX-200}px, ${mouseCoordinate.clientY < 50 ? mouseCoordinate.clientY : mouseCoordinate.clientY - 30}px);">
+			<span class="translate-card-title">翻译结果：</span><span class="translate-card-value">${res.data.trans_result[0].dst}</span>
+		</div>
+	`; //翻译卡片
+		}).catch((error) => {
+		console.log(error);
+	})
+}
+
 //翻译选中内容
 function translateCheckedText () {
 	const copyCheckedText = checkedText; //拷贝一份选中的文本
 	checkedText = ''
-	document.getElementById('chromeTranslate').innerHTML = ''; //清除翻译按钮
-	document.getElementById('chromeTranslate').innerHTML = `
-		<div class="translate-card"
-		style="transform: translate(${mouseCoordinate.clientX<200?mouseCoordinate.clientX : mouseCoordinate.clientX-200}px, ${mouseCoordinate.clientY - 30}px);">
-			<span class="translate-card-title">翻译结果：</span><span class="translate-card-value">${copyCheckedText}</span>
-		</div>
-	`; //翻译卡片
+	getTranslateResult(copyCheckedText)
+	document.getElementById('chromeTranslate').innerHTML = `<div class="translate-button" style="display: none"></div>`; //清除翻译按钮
 }
 
 //新增翻译按钮
@@ -25,7 +50,7 @@ function addButton () {
 		`<img
 				class="translate-button"
 				src="${translateIcon}"
-				style="transform: translate(${mouseCoordinate.clientX}px, ${mouseCoordinate.clientY - 30}px);"  alt="icon"/>
+				style="transform: translate(${mouseCoordinate.clientX}px, ${mouseCoordinate.clientY < 50 ? mouseCoordinate.clientY : mouseCoordinate.clientY - 30}px);">
 			`;
 }
 /**
@@ -43,7 +68,7 @@ document.querySelector('body').addEventListener('mouseup', function (event) {
 						<div class="translate-button" style="display: none"></div>
 				   </div>'`);
 	}
-	document.getElementById('chromeTranslate').innerHTML = ''; //清除容器内的元素
+	document.getElementById('chromeTranslate').innerHTML = `<div class="translate-button" style="display: none"></div>`; //清除容器内的元素
 	// 选中文字时候添加翻译按钮
 	if (checkedText) {
 		addButton();
