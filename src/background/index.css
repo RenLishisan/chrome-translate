@@ -1,0 +1,34 @@
+#chromeTranslate {
+}
+#chromeTranslate .translate-button {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 30px;
+	border: 1px solid #f4ea29;
+	border-radius: 8px;
+	box-shadow: -5px 5px 15px 1px rgb(0 0 0 / 10%);
+	background: #FFFFFF;
+	z-index: 2347483647;
+}
+#chromeTranslate .translate-card {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 200px;
+	min-height: 60px;
+	padding: 4px;
+	background: #FFFFFF;
+	box-shadow: -5px 5px 15px 1px rgb(0 0 0 / 10%);
+	border-radius: 13px;
+	color: hsl(233, 13%, 49%);
+	z-index: 2347483647;
+}
+#chromeTranslate .translate-card .translate-card-title{
+	font-weight: 700;
+	font-size: 14px;
+}
+#chromeTranslate .translate-card .translate-card-value{
+	font-weight: 400;
+	font-size: 14px;
+}
